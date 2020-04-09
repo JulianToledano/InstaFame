@@ -2,6 +2,10 @@
 # Created by https://www.gitignore.io/api/vim,python,virtualenv,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=vim,python,virtualenv,visualstudiocode
 
+#Specific project ignores:
+
+geckodriver.log
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
