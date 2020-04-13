@@ -56,7 +56,7 @@ class PhotoUploader():
             '//button[text()="Cancel"]')
         not_now.click()
 
-    def upload_pic(self):
+    def upload_pic(self, caption):
         '''
             After clicking + button to upload a picture a system window will
             appear to choose it, autokey manages this.
@@ -67,7 +67,7 @@ class PhotoUploader():
         new_post_btn.click()
 
         os.system('/usr/bin/autokey-run -s image_select')
-        time.sleep(3)
+        time.sleep(6)
 
         button = self.browser.find_elements_by_xpath(
             "//*[contains(text(), 'Expand')]")
@@ -79,7 +79,6 @@ class PhotoUploader():
 
         caption_field = self.browser.find_element_by_xpath(
             "//textarea[@aria-label='Write a caption…']")
-        caption = ''
         caption_field.send_keys(caption)
         share_btn = self.browser.find_element_by_xpath(
             "//button[contains(text(),'Share')]").click()
