@@ -1,3 +1,2 @@
-from .unsplash_search import UnsplashSearch
-from .unsplash_downloader import UnsplashDownloader
-__all__ = ['UnsplashSearch', 'UnsplashDownloader']
+from .unsplash_search import Unsplash
+__all__ = ['Unsplash']

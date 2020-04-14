@@ -11,14 +11,14 @@ from pathlib import Path
 
 
 # TODO: logs
-class UnsplashSearch(object):
+class Unsplash(object):
     """ Retrieve metadata from unsplash.
 
     Args:
         access_key (str): Your access_key. You can find this in the app developer page.
         destination_path (pathlib.Path): path where metadata will be saved.
     """
-    def __init__(self, access_key, destination_path):
+    def __init__(self, access_key):
 
         self._access_key = access_key
         self._ses = requests.Session()
@@ -27,11 +27,8 @@ class UnsplashSearch(object):
 
         self._base_endpoint = "https://api.unsplash.com/"
         self._search_photos_endpoint = "/search/photos"
-        self._destination_path = Path(destination_path)
-        if not self._destination_path.exists():
-            self._destination_path.mkdir()
 
-    def search_photo(self, query, per_page, page_number):
+    def search_photos(self, query, per_page, page_number):
         """ Search for photos using a query.
 
         Args:
@@ -55,13 +52,18 @@ class UnsplashSearch(object):
                                                  ex.response)))
         else:
             data = resp.json()
-            for result in data['results']:
-                result['links'] = None
-                result['tags'] = None
-                file_name = str(result['id']) + '.json'
-                with (self._destination_path / file_name).open('w') as f:
-                    out = json.dumps(result)
-                    f.write(out)
+            return data['results']
 
-            # file_name = data['id']
-            # print(file_name)
+    def download_photo(self, metadata_file, destination_dir):
+        """ Downloads a photo given a unsplash metadata file.
+        """
+        with metadata_file.open() as f:
+            metadata = json.load(f)
+        file_name = metadata['id'] + '.jpg'
+        destination_file = destination_dir / file_name
+        url = metadata['urls']['full']
+        r = requests.get(url, stream=True)
+        if r.status_code == 200:
+            with destination_file.open('wb') as f:
+                for chunk in r.iter_content(1024):
+                    f.write(chunk)
