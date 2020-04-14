@@ -6,12 +6,15 @@ Check it out here:
 '''
 import time
 import os
+import logging
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 
 class PhotoUploader():
     def __init__(self, email, password):
+        logging.basicConfig(level=logging.info)
+        self._logger = logging.getLogger(__name__)
         self.email = email
         self.password = password
         chrome_options = webdriver.ChromeOptions()
@@ -27,9 +30,12 @@ class PhotoUploader():
     #   save your info login.
     #   add to home screen
     def login(self):
+        self._logger.info('Starting browser... type={}'.format(self.browser))
         self.browser.get('https://www.instagram.com/accounts/login/')
         time.sleep(1)
-
+        self._logger.info(
+            'Log in in with credentiasl. user={} password={}'.format(
+                self.email, self.password))
         # Set username, password and submit.
         username_input = self.browser.find_element_by_xpath(
             "//input[@name='username']")
@@ -38,10 +44,11 @@ class PhotoUploader():
             "//input[@name='password']")
         password_input.send_keys(self.password)
         password_input.submit()
-
+        self._logger.info('Authentication OK.')
         time.sleep(3)
 
         # save your info pop-up.
+        self._logger.info('Save your info pop-up')
         not_now = self.browser.find_element_by_xpath(
             '//button[text()="Not Now"]')
         not_now.click()
@@ -52,6 +59,7 @@ class PhotoUploader():
         # TODO: sometimes it fails with:
         #       selenium.common.exceptions.WebDriverException: Message: chrome not reachable
         # check it out.
+        self._logger.info('Not now pop-up.')
         not_now = self.browser.find_element_by_xpath(
             '//button[text()="Cancel"]')
         not_now.click()
@@ -62,21 +70,25 @@ class PhotoUploader():
             appear to choose it, autokey manages this.
             Learn more from here: https://github.com/autokey/autokey
         '''
+        self._logger.info('Posting picture')
         new_post_btn = self.browser.find_element_by_xpath(
             "//div[@role='menuitem']")
         new_post_btn.click()
-
+        self._logger.info('OS selecting picture')
         os.system('/usr/bin/autokey-run -s image_select')
         time.sleep(6)
 
+        self._logger.info('Setting image size.')
         button = self.browser.find_elements_by_xpath(
             "//*[contains(text(), 'Expand')]")
         if len(button) > 0:
             button[0].click()
+
         next_btn = self.browser.find_element_by_xpath(
             "//button[contains(text(),'Next')]").click()
         time.sleep(2)
 
+        self._logger.info('Writting caption.')
         caption_field = self.browser.find_element_by_xpath(
             "//textarea[@aria-label='Write a caption…']")
         caption_field.send_keys(caption)
