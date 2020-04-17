@@ -150,6 +150,7 @@ venv.bak/
 pip-selfcheck.json
 
 ### VisualStudioCode ###
+.vscode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -160,5 +161,8 @@ pip-selfcheck.json
 # Ignore all local history of files
 .history
 
+### Datasets ###
+data/unsplash
+data/instagram
 # End of https://www.gitignore.io/api/vim,python,virtualenv,visualstudiocode
 

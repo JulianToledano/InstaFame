@@ -11,7 +11,11 @@ import logging
 from pathlib import Path
 
 
-# TODO: logs
+# TODO: save results in a directory with structure:
+#   -- unsplash
+#       |-- metadata
+#       |-- photos
+# TODO: logs are pretty bad.
 class Unsplash(object):
     """ Retrieve metadata from unsplash.
 
